@@ -39,12 +39,13 @@ options=[
     {"data":["S/.300- S/.500","S/.500- S/.700","S/.700- S/.900","S/.900 a más"],"multi":False,"id":"entry.1442261410"}
 ]
 
-values={}
+
 
 def main(arg1):
 
     for iteration in range(int(arg1)):
         #de 1 a 10 miutos.
+        values={}
         timeSleepRamdom=random.randint(1,10);
         for option in options:
             dat=option['data']
@@ -56,7 +57,7 @@ def main(arg1):
                 values[option['id']]=dat[n];
 
         r =requests.post(url, data=values)
-        requestOuput={"numberOfIteration":iteration,"status":r,"data":values,"timeSleep":timeSleepRamdom}
+        requestOuput={"numberOfIteration":iteration,"status":r.status_code,"data":values,"timeSleep":timeSleepRamdom}
         print(json.dumps(requestOuput))
         time.sleep(timeSleepRamdom*60)
 
