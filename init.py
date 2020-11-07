@@ -1,6 +1,8 @@
 import requests
 import random
 import json
+import time
+import sys
 
 
 #URL COPIA
@@ -39,18 +41,32 @@ options=[
 
 values={}
 
-for option in options:
-    dat=option['data']
-    if(option['multi']):
-        n=random.randint(1,len(dat))
-        values[option['id']]=random.sample(dat,n)
-    else:
-        n=random.randint(0,len(dat)-1)
-        values[option['id']]=dat[n];
+def main(arg1):
 
-r =requests.post(url, data=values)
-print(json.dumps(values)) 
-print(r);
+    for iteration in range(int(arg1)):
+        #de 1 a 10 miutos.
+        timeSleepRamdom=random.randint(1,10);
+        for option in options:
+            dat=option['data']
+            if(option['multi']):
+                n=random.randint(1,len(dat))
+                values[option['id']]=random.sample(dat,n)
+            else:
+                n=random.randint(0,len(dat)-1)
+                values[option['id']]=dat[n];
+
+        r =requests.post(url, data=values)
+        requestOuput={"numberOfIteration":iteration,"status":r,"data":values,"timeSleep":timeSleepRamdom}
+        print(json.dumps(requestOuput))
+        time.sleep(timeSleepRamdom*60)
+
+
+#ejecutar el comando pasandole la cantidad de request que quieres hacer:
+if __name__ == "__main__":
+    main(sys.argv[1])
+
+# print(json.dumps(values)) 
+# print(r);
 
 
 
