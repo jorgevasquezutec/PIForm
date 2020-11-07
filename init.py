@@ -5,6 +5,8 @@ import time
 import sys
 import numpy as np
 from numpy.random import choice
+import datetime
+
 # from numpy.random import choice
 
 
@@ -50,11 +52,13 @@ options=[
 
 
 
-def requestByType(default,n):
+def requestByType(default,n,f):
      for iteration in range(n):
         #de 1 a 10 miutos.
+      
         values={}
         timeSleepRamdom=random.randint(1,10);
+        print("iteracion: ",iteration,"de:",n,"defaulvalues: ",default,"siguienterequesten(min): ",timeSleepRamdom)
         for option in options:
             if option['id'] in default:
                 values[option['id']]=default[option['id']]
@@ -70,19 +74,21 @@ def requestByType(default,n):
                         n=random.randint(0,len(dat)-1)
                         values[option['id']]=dat[n];
 
-        r =requests.post(url, data=values)
-        requestOuput={"numberOfIteration":iteration,"status":r.status_code,"data":values,"timeSleep":timeSleepRamdom}
-        # requestOuput={"numberOfIteration":iteration,"status":200,"data":values,"timeSleep":timeSleepRamdom}
-        print(requestOuput);
+        # r =requests.post(url, data=values)
+        # requestOuput={"numberOfIteration":iteration,"status":r.status_code,"data":values,"timeSleep":timeSleepRamdom}
+        requestOuput={"numberOfIteration":iteration,"status":200,"data":values,"timeSleep":timeSleepRamdom}
+        print(json.dumps(requestOuput),file=f);
         # time.sleep(timeSleepRamdom*60)
 
 
 #femenino 84 # masculino 40.
 def main(arg1,arg2):
-    masculino={"entry.1335896991":"Masculino"};
-    femenino={"entry.1335896991":"Femenino"};
-    requestByType(femenino,int(arg1));
-    requestByType(masculino,int(arg2));
+   token=datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+   with open('output'+token+'.txt', 'w+') as f:
+        masculino={"entry.1335896991":"Masculino"};
+        femenino={"entry.1335896991":"Femenino"};
+        requestByType(femenino,int(arg1),f);
+        requestByType(masculino,int(arg2),f);
 
 #ejecutar el comando pasandole la cantidad de request que quieres hacer:
 if __name__ == "__main__":
